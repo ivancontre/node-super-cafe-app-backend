@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { dbConnection } from '../database/config';
 
 
 
@@ -14,11 +15,18 @@ export default class Server {
         this.port = process.env.PORT as string;
         this.usersPath = '/api/users';
 
+        // Conectar a base de datos
+        this.connectToDB();
+
         // Middlewares
         this.middlewares();
 
         // Routes
         this.routes();
+    }
+
+    async connectToDB() {
+        await dbConnection();
     }
 
     middlewares() {
