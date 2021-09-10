@@ -13,15 +13,34 @@ interface CustomResponse extends Response {
     json: Send<this>;
 };
 
-export const getUser = async (req: Request, res: Response): Promise<CustomResponse> => {
+export const getUser = async (req: Request, res: Response): Promise<CustomResponse> => {    
 
-    const { q, name } = req.query;
+    try {
 
-    return res.status(201).json({
-        msg: 'User getted',
-        q,
-        name
-    });
+        const { limit = 5, from = 0 } = req.query;
+
+        const [total, users] = await Promise.all([
+            UserModel.find({ status: true })
+                .countDocuments(),
+
+            UserModel.find({ status: true })
+                .limit(Number(limit))
+                .skip(Number(from))                 
+        ]);
+
+        return res.status(200).json({
+            msg: 'Users getted',
+            total, 
+            users
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
 
 };
 
@@ -75,10 +94,10 @@ export const putUser = async (req: Request, res: Response): Promise<CustomRespon
 
         }
 
-        const user = await UserModel.findByIdAndUpdate(id, rest);
+        const user = await UserModel.findByIdAndUpdate(id, rest, { new: true });
 
         return res.status(200).json({
-            msg: 'User update',
+            msg: 'User updated',
             user
         });
 
@@ -95,11 +114,22 @@ export const putUser = async (req: Request, res: Response): Promise<CustomRespon
 
 export const deleteUser = async (req: Request, res: Response): Promise<CustomResponse> => {
 
-    const id = req.params.id;
+    try {
+        const id = req.params.id;
 
-    return res.status(201).json({
-        msg: 'User deleted' 
-    });
+        await UserModel.findByIdAndUpdate(id, { status: false }, { new: true });
+
+        return res.status(200).json({
+            msg: 'User deleted'
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }
 
 };
 
