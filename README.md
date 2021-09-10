@@ -5,12 +5,14 @@ Está creada en base:
 * NodeJS
 * Express
 * Typescript
+* BcryptJS
+* MongoDB
 
 ### Despliegue en Heroku por primera vez
 
 1. Crear una aplicación en Heroku y escoger la opción "Heroku Git"
 2. En la raíz del proyecto ejecutar mediante consola ``heroku login``
-3. En la raíz del proyecto ejecutar mediante consola  ``heroku git:clone -a rest-server-nodejs-express-ic``
+3. En la raíz del proyecto ejecutar mediante consola  ``heroku git:clone -a restserver-nodejs-express-cafe``
 
 
 ### Despliegue de cambios

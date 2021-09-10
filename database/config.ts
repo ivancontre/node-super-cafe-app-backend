@@ -1,4 +1,5 @@
 import { connect } from 'mongoose';
+import 'dotenv/config';
 
 const uri: string = process.env.MONGODB_CNN as string;
 
