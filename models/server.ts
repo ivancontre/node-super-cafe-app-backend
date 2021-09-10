@@ -11,6 +11,7 @@ export default class Server {
     usersPath: string;
 
     constructor() {
+        
         this.app = express();
         this.port = process.env.PORT as string;
         this.usersPath = '/api/users';
