@@ -1,4 +1,7 @@
 import { Request, Response} from 'express';
+import bcrypt from 'bcryptjs';
+
+import { UserModel } from '../models/User';
 
 interface Json {
     msg: string;
@@ -24,19 +27,69 @@ export const getUser = async (req: Request, res: Response): Promise<CustomRespon
 
 export const postUser = async (req: Request, res: Response): Promise<CustomResponse> => {
 
-    return res.status(201).json({
-        msg: 'User created' 
-    });
+    try {
+
+        const { name, email, password, role } = req.body;
+
+        const user = new UserModel({
+            name,
+            email,
+            password,
+            role
+        });
+
+        // Encriptar password
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(password, salt);
+
+        await user.save();
+
+        return res.status(201).json({
+            msg: 'User created',
+            user
+        });
+
+    } catch (error) {
+
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }   
 
 };
 
-export const putUser = async (req: Request, res: Response): Promise<CustomResponse> => {
+export const putUser = async (req: Request, res: Response): Promise<CustomResponse> => {    
 
-    const id = req.params.id;
+    try {
 
-    return res.status(201).json({
-        msg: 'User updated' 
-    });
+        const id = req.params.id;
+
+        const { _id, password, google, email, ...rest } = req.body;
+
+        if (password) {
+            // Encriptar password
+            const salt = bcrypt.genSaltSync();
+            rest.password = bcrypt.hashSync(password, salt);
+
+        }
+
+        const user = await UserModel.findByIdAndUpdate(id, rest);
+
+        return res.status(200).json({
+            msg: 'User update',
+            user
+        });
+
+    } catch (error) {
+
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }   
 
 };
 
