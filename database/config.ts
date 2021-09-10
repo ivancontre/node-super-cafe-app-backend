@@ -2,8 +2,6 @@ import { connect } from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' });
 
-console.log(process.env)
-
 const uri: string = process.env.MONGODB_CNN as string;
 
 export const dbConnection = async () => {
