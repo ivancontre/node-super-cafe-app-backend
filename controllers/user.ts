@@ -37,7 +37,6 @@ export const getUser = async (req: Request, res: Response): Promise<CustomRespon
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            ok: false,
             msg: 'Por favor hable con el administrador'
         });
     }
@@ -69,10 +68,8 @@ export const postUser = async (req: Request, res: Response): Promise<CustomRespo
         });
 
     } catch (error) {
-
         console.log(error);
         return res.status(500).json({
-            ok: false,
             msg: 'Por favor hable con el administrador'
         });
     }   
@@ -105,7 +102,6 @@ export const putUser = async (req: Request, res: Response): Promise<CustomRespon
 
         console.log(error);
         return res.status(500).json({
-            ok: false,
             msg: 'Por favor hable con el administrador'
         });
     }   
@@ -126,7 +122,6 @@ export const deleteUser = async (req: Request, res: Response): Promise<CustomRes
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            ok: false,
             msg: 'Por favor hable con el administrador'
         });
     }

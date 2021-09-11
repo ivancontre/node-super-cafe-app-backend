@@ -9,12 +9,14 @@ export default class Server {
     app: express.Application;
     port: string;
     usersPath: string;
+    authPath: string;
 
     constructor() {
         
         this.app = express();
         this.port = process.env.PORT as string;
         this.usersPath = '/api/users';
+        this.authPath = '/api/auth';
 
         // Conectar a base de datos
         this.connectToDB();
@@ -41,10 +43,10 @@ export default class Server {
         this.app.use(express.static('public'));
     }
 
-    routes() {        
+    routes() {       
 
+        this.app.use(this.authPath, require('../routes/auth'))
         this.app.use(this.usersPath, require('../routes/user'));
-
     }
 
     listen() {

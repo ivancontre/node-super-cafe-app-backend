@@ -35,8 +35,8 @@ const schema = new Schema<User>({
 
 schema.methods.toJSON = function () {
 
-    const { __v, password, ...user } = this.toObject();
-    
+    const { __v, _id, password, ...user } = this.toObject();
+    user.id = _id;
     return user;
 
 };
