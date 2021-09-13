@@ -4,17 +4,7 @@ import { compareSync } from 'bcryptjs';
 import { UserModel } from '../models/User';
 import { generateJWT } from '../helpers/jwt';
 
-interface Json {
-    msg: string;
-};
-
-type Send<T = Response> = (body?: Json) => T;
-
-interface CustomResponse extends Response {
-    json: Send<this>;
-};
-
-export const login = async (req: Request, res: Response): Promise<CustomResponse> => {
+export const login = async (req: Request, res: Response) => {
 
     try {
 
@@ -32,7 +22,7 @@ export const login = async (req: Request, res: Response): Promise<CustomResponse
         // Verficar status
         if (!user.status) {
             return res.status(400).json({
-                msg: `Usuario y contraseña no son correctos`
+                msg: `Usuario y contraseña no son correctos.`
             });
         }
 

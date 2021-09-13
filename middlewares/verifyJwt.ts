@@ -10,7 +10,6 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
 
     if (!token) {
         return res.status(401).json({
-            ok: false,
             msg: 'No hay token en la petición'
         });
     }
@@ -19,22 +18,34 @@ export const verifyJWT = async (req: Request, res: Response, next: NextFunction)
 
         const payload: JwtPayload = verify(token, process.env.SECRET_JWT_SEED as string) as JwtPayload;
         
-        const { id, name } = payload;
+        const { id } = payload;
 
-        const user = await UserModel.findOne({ _id: id }).select({ "email": 1, "_id": 0});
+        const userAuthtenticated = await UserModel.findOne({ _id: id });
+
+        if (!userAuthtenticated) {
+            return res.status(401).json({
+                msg: 'Token inválido - user not exists'
+            });
+        }
+
+        // Verificar si el status esta en true
+        if (!userAuthtenticated!.status) {
+            return res.status(401).json({
+                msg: 'Token inválido - user status: false'
+            });
+        }
         
-        // es se pasará por next a la siguiente funcion
-        req.body.id = id;
-        req.body.name = name;   
-        req.body.email = user ? user.email : undefined;
+        // esto se pasará por next a la siguiente funcion
+        const user = userAuthtenticated;
+        req.user = user;
+
+        next();
         
     } catch (error) {
         console.log(error);
         return res.status(401).json({
-            ok: false,
             msg: 'Token inválido'
         });
     }
 
-    next();
 };

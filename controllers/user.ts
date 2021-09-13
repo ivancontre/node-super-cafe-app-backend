@@ -3,17 +3,7 @@ import bcrypt from 'bcryptjs';
 
 import { UserModel } from '../models/User';
 
-interface Json {
-    msg: string;
-};
-
-type Send<T = Response> = (body?: Json) => T;
-
-interface CustomResponse extends Response {
-    json: Send<this>;
-};
-
-export const getUser = async (req: Request, res: Response): Promise<CustomResponse> => {    
+export const getUser = async (req: Request, res: Response) => {    
 
     try {
 
@@ -43,7 +33,7 @@ export const getUser = async (req: Request, res: Response): Promise<CustomRespon
 
 };
 
-export const postUser = async (req: Request, res: Response): Promise<CustomResponse> => {
+export const postUser = async (req: Request, res: Response) => {
 
     try {
 
@@ -76,7 +66,7 @@ export const postUser = async (req: Request, res: Response): Promise<CustomRespo
 
 };
 
-export const putUser = async (req: Request, res: Response): Promise<CustomResponse> => {    
+export const putUser = async (req: Request, res: Response) => {    
 
     try {
 
@@ -108,15 +98,17 @@ export const putUser = async (req: Request, res: Response): Promise<CustomRespon
 
 };
 
-export const deleteUser = async (req: Request, res: Response): Promise<CustomResponse> => {
+export const deleteUser = async (req: Request, res: Response) => {
 
     try {
+        
         const id = req.params.id;
 
-        await UserModel.findByIdAndUpdate(id, { status: false }, { new: true });
+        const user = await UserModel.findByIdAndUpdate(id, { status: false }, { new: true });
 
         return res.status(200).json({
-            msg: 'User deleted'
+            msg: 'User deleted',
+            userDeleted: user
         });
 
     } catch (error) {
@@ -128,7 +120,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<CustomRes
 
 };
 
-export const patchUser = async (req: Request, res: Response): Promise<CustomResponse> => {
+export const patchUser = async (req: Request, res: Response) => {
 
     const id = req.params.id;
     

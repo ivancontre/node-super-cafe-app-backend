@@ -2,9 +2,17 @@ import { Router } from 'express';
 import { check, query } from 'express-validator';
 import { deleteUser, getUser, patchUser, postUser, putUser } from '../controllers/user';
 import { existsEmail, existsUser, isValidRole } from '../helpers/dbValidators';
-import { fieldsValidator } from '../middlewares/fieldsValidator';
+
+import {
+    fieldsValidator,
+    verifyJWT,
+    hasRole
+
+} from '../middlewares';
 
 const router: Router = Router();
+
+//router.use(verifyJWT);
 
 router.get(
     '/',
@@ -41,6 +49,9 @@ router.put(
 
 router.delete(
     '/:id',
+    verifyJWT,
+    //isAdminRole,
+    hasRole('ADMIN_ROLE', 'SALES_ROLE'),
     [
         check('id', 'El ID no es válido').isMongoId(),
         check('id').custom(existsUser),
