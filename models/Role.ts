@@ -1,11 +1,14 @@
-import { Schema, model } from 'mongoose';
-import Role from './types/Role';
+import { Schema, model, Document, Model } from 'mongoose';
 
-const schema = new Schema<Role>({
+export interface IRole extends Document{
+    name: string;
+};
+
+const schema: Schema = new Schema({
     name: { 
         type: String, 
         required: [true, 'the "name" is required'] 
     }
 });
 
-export const RoleModel = model<Role>('Role', schema);
+export const RoleModel: Model<IRole> = model<IRole>('Role', schema);

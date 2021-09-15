@@ -3,6 +3,8 @@ import { compareSync } from 'bcryptjs';
 
 import { UserModel } from '../models/User';
 import { generateJWT } from '../helpers/jwt';
+import { googleVerify } from '../helpers/googleVerify';
+import { TokenPayload } from 'google-auth-library';
 
 export const login = async (req: Request, res: Response) => {
 
@@ -38,9 +40,6 @@ export const login = async (req: Request, res: Response) => {
         // Generar JWT
         const token = await generateJWT(user.id, user.name);
 
-
-
-
         return res.status(200).json({
             user,
             token
@@ -49,8 +48,65 @@ export const login = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            ok: false,
             msg: 'Por favor hable con el administrador'
         });
     }
-}
+};
+
+export const google = async (req: Request, res: Response) => {
+
+    try {
+
+        const { id_token } = req.body;
+
+        const { name, email, picture: img } = await googleVerify(id_token) as TokenPayload;
+
+        let user = await UserModel.findOne({ email });
+
+        // Sino existe lo creamos
+        if (!user) {
+
+            user = new UserModel({
+                name,
+                email,
+                img,
+                google: true,
+                password: ':)',
+
+            });
+
+            await user.save();
+
+        } else { 
+            // Si existe lo actualizamos
+            await UserModel.findByIdAndUpdate(user.id, {
+                name,
+                img,
+                google: true,
+                password: ':)'
+            }, { new: true });
+        }
+
+        // Verficar status
+        if (!user.status) {
+            return res.status(401).json({
+                msg: 'Por favor hable con el administrador. Usuario bloqueado'
+            });
+        }
+
+        // Generar JWT
+        const token = await generateJWT(user.id, user.name);
+
+        return res.status(200).json({
+            user,
+            token
+        });        
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            msg: 'Token google inválido'
+        });
+    }   
+
+};

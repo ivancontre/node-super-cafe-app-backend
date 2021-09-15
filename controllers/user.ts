@@ -1,7 +1,7 @@
 import { Request, Response} from 'express';
 import bcrypt from 'bcryptjs';
 
-import { UserModel } from '../models/User';
+import { UserModel, IUser } from '../models/User';
 
 export const getUser = async (req: Request, res: Response) => {    
 
@@ -39,7 +39,7 @@ export const postUser = async (req: Request, res: Response) => {
 
         const { name, email, password, role } = req.body;
 
-        const user = new UserModel({
+        const user: IUser = new UserModel({
             name,
             email,
             password,
@@ -47,7 +47,7 @@ export const postUser = async (req: Request, res: Response) => {
         });
 
         // Encriptar password
-        const salt = bcrypt.genSaltSync();
+        const salt: string = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync(password, salt);
 
         await user.save();
@@ -89,7 +89,6 @@ export const putUser = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
-
         console.log(error);
         return res.status(500).json({
             msg: 'Por favor hable con el administrador'

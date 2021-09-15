@@ -1,7 +1,16 @@
-import { Schema, model } from 'mongoose';
-import User from './types/User';
+import { Schema, model, Document, Model } from 'mongoose';
 
-const schema = new Schema<User>({
+export interface IUser extends Document{
+    name: string;
+    email: string;
+    password: string;
+    img?: string;
+    role?: string;
+    status?: boolean;
+    google?: boolean;
+};
+
+const schema: Schema = new Schema({
     name: { 
         type: String, 
         required: [true, 'the "name" is required'] 
@@ -20,8 +29,8 @@ const schema = new Schema<User>({
     },
     role: {
         type: String,
-        required:  [true, 'the "role" is required'],
-        enum: ['ADMIN_ROLE', 'USER_ROLE']
+        default: 'USER_ROLE',
+        enum: ['ADMIN_ROLE', 'SALES_ROLE', 'USER_ROLE']
     },
     status: {
         type: Boolean,
@@ -41,4 +50,4 @@ schema.methods.toJSON = function () {
 
 };
 
-export const UserModel = model<User>('User', schema);
+export const UserModel: Model<IUser> = model<IUser>('User', schema);

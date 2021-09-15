@@ -7,7 +7,6 @@ import {
     fieldsValidator,
     verifyJWT,
     hasRole
-
 } from '../middlewares';
 
 const router: Router = Router();
@@ -16,6 +15,7 @@ const router: Router = Router();
 
 router.get(
     '/',
+    verifyJWT,
     [
         query('limit', 'El queryParmas "limit" debe ser un número entero').optional().isNumeric(),
         query('from', 'El queryParams "from" debe ser un número entero').optional().isNumeric(),
@@ -31,7 +31,7 @@ router.post(
         check('email', 'El campo "email" es obligatorio').isEmail(),
         check('email').custom(existsEmail),
         check('password', 'El campo "password" debe de ser al menos de 6 caracteres').isLength({ min: 6 }),
-        check('role').custom(isValidRole),
+        check('role').optional().custom(isValidRole),
         fieldsValidator
     ],
     postUser
@@ -39,6 +39,7 @@ router.post(
 
 router.put(
     '/:id',
+    verifyJWT,
     [
         check('id', 'El ID no es válido').isMongoId(),
         check('id').custom(existsUser),

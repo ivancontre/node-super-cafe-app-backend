@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { login } from '../controllers/auth';
+import { google, login } from '../controllers/auth';
 import { fieldsValidator } from '../middlewares/fieldsValidator';
 
 const router: Router = Router();
@@ -13,6 +13,15 @@ router.post(
         fieldsValidator
     ],
     login
+);
+
+router.post(
+    '/google',
+    [
+        check('id_token', 'El id_token es obligatorio').notEmpty(),
+        fieldsValidator
+    ],
+    google
 );
 
 module.exports = router;
