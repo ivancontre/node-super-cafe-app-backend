@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { check, query } from 'express-validator';
-import { deleteUser, getUser, patchUser, postUser, putUser } from '../controllers/user';
+import { 
+    deleteUser, 
+    getUsers, 
+    patchUser, 
+    postUser, 
+    putUser 
+} from '../controllers/user';
 import { existsEmail, existsUser, isValidRole } from '../helpers/dbValidators';
 
 import {
@@ -21,7 +27,7 @@ router.get(
         query('from', 'El queryParams "from" debe ser un número entero').optional().isNumeric(),
         fieldsValidator
     ],
-    getUser
+    getUsers
 );
 
 router.post(

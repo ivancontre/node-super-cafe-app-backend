@@ -8,15 +8,18 @@ import { dbConnection } from '../database/config';
 export default class Server {
     app: express.Application;
     port: string;
-    usersPath: string;
-    authPath: string;
+    paths: any;
 
     constructor() {
         
         this.app = express();
         this.port = process.env.PORT as string;
-        this.usersPath = '/api/users';
-        this.authPath = '/api/auth';
+
+        this.paths = {
+            users: '/api/users',
+            auth: '/api/auth',
+            category: '/api/categories'
+        };
 
         // Conectar a base de datos
         this.connectToDB();
@@ -45,8 +48,9 @@ export default class Server {
 
     routes() {       
 
-        this.app.use(this.authPath, require('../routes/auth'))
-        this.app.use(this.usersPath, require('../routes/user'));
+        this.app.use(this.paths.auth, require('../routes/auth'))
+        this.app.use(this.paths.users, require('../routes/user'));
+        this.app.use(this.paths.category, require('../routes/category'));
     }
 
     listen() {

@@ -1,7 +1,7 @@
 import { Request, Response} from 'express';
 import { compareSync } from 'bcryptjs';
 
-import { UserModel } from '../models/User';
+import { UserModel } from '../models';
 import { generateJWT } from '../helpers/jwt';
 import { googleVerify } from '../helpers/googleVerify';
 import { TokenPayload } from 'google-auth-library';
@@ -24,7 +24,13 @@ export const login = async (req: Request, res: Response) => {
         // Verficar status
         if (!user.status) {
             return res.status(400).json({
-                msg: `Usuario y contraseña no son correctos.`
+                msg: `Usuario y contraseña no son correctos`
+            });
+        }
+
+        if (user.google) {
+            return res.status(400).json({
+                msg: `Cuenta creada con google`
             });
         }
 
