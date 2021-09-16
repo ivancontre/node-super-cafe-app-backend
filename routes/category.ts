@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { check } from 'express-validator';
+import { check, query } from 'express-validator';
 import { 
     deleteCategory, 
     getCategories, 
@@ -7,13 +7,29 @@ import {
     postCategory, 
     putCategory 
 } from '../controllers/category';
-import { fieldsValidator, verifyJWT } from '../middlewares';
+import { existsCategory } from '../helpers/dbValidators';
+import { fieldsValidator, hasRole, verifyJWT } from '../middlewares';
 
 const router: Router = Router();
 
-router.get('/', getCategories);
+router.get(
+    '/',
+    [
+        query('limit', 'El queryParmas "limit" debe ser un número entero').optional().isNumeric(),
+        query('from', 'El queryParams "from" debe ser un número entero').optional().isNumeric(),
+    ],
+    getCategories
+);
 
-router.get('/:id', getCategory);
+router.get(
+    '/:id',
+    [
+        check('id', 'El ID no es válido').isMongoId(),
+        check('id').custom(existsCategory),   
+        fieldsValidator
+    ],
+    getCategory
+);
 
 router.post(
     '/', 
@@ -25,8 +41,28 @@ router.post(
     postCategory
 );
 
-router.put('/:id', putCategory);
+router.put(
+    '/:id',
+    verifyJWT,
+    [
+        check('id', 'El ID no es válido').isMongoId(),
+        check('id').custom(existsCategory),
+        check('name', 'El campo "name" es obligatorio').not().isEmpty(),        
+        fieldsValidator
+    ],
+    putCategory
+);
 
-router.delete('/:id', deleteCategory);
+router.delete(
+    '/:id',
+    verifyJWT,
+    hasRole('ADMIN_ROLE'),
+    [
+        check('id', 'El ID no es válido').isMongoId(),
+        check('id').custom(existsCategory),
+        fieldsValidator
+    ],
+    deleteCategory
+);
 
 module.exports = router;

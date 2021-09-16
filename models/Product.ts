@@ -1,10 +1,15 @@
 import { Schema, model, Document, Model, PopulatedDoc } from 'mongoose';
+import { ICategory } from './Category';
 import { IUser } from './User';
 
-export interface ICategory extends Document{
+export interface IProduct extends Document{
     name: string;
     status?: boolean;
-    user: PopulatedDoc<IUser>
+    user: PopulatedDoc<IUser>;
+    price?: number;
+    category: PopulatedDoc<ICategory>;
+    description?: string;
+    available?: boolean;
 };
 
 const schema: Schema = new Schema({
@@ -21,6 +26,22 @@ const schema: Schema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    price: {
+        type: Number,
+        default: 0
+    },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
+    description: {
+        type: String
+    },
+    available: {
+        type: Boolean,
+        default: true
     }
 });
 
@@ -32,4 +53,4 @@ schema.methods.toJSON = function () {
 
 };
 
-export const CategoryModel: Model<ICategory> = model<ICategory>('Category', schema);
+export const ProductModel: Model<IProduct> = model<IProduct>('Product', schema);

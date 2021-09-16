@@ -1,5 +1,4 @@
-import { RoleModel } from "../models/Role";
-import { UserModel } from "../models/User";
+import { CategoryModel, ProductModel, RoleModel, UserModel } from "../models";
 
 export const isValidRole = async (name: string) => {
 
@@ -25,6 +24,24 @@ export const existsUser = async (id: string) => {
     const userExists = await UserModel.findById(id);
 
     if (!userExists) {
-        throw new Error(`El ID "${ id }" no existe`);
+        throw new Error(`El ID "${ id }" de usuario no existe`);
+    }
+};
+
+export const existsCategory = async (id: string) => {
+
+    const categoryExists = await CategoryModel.findById(id);
+
+    if (!categoryExists || !categoryExists.status) {
+        throw new Error(`El ID "${ id }" de categoría no existe`);
+    }
+};
+
+export const existsProduct = async (id: string) => {
+
+    const productExists = await ProductModel.findById(id);
+
+    if (!productExists || !productExists.status) {
+        throw new Error(`El ID "${ id }" de producto no existe`);
     }
 };

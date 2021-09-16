@@ -18,7 +18,8 @@ export default class Server {
         this.paths = {
             users: '/api/users',
             auth: '/api/auth',
-            category: '/api/categories'
+            categories: '/api/categories',
+            products: '/api/products',
         };
 
         // Conectar a base de datos
@@ -50,7 +51,9 @@ export default class Server {
 
         this.app.use(this.paths.auth, require('../routes/auth'))
         this.app.use(this.paths.users, require('../routes/user'));
-        this.app.use(this.paths.category, require('../routes/category'));
+        this.app.use(this.paths.categories, require('../routes/category'));
+        this.app.use(this.paths.products, require('../routes/product'));
+
     }
 
     listen() {
