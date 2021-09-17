@@ -1,6 +1,58 @@
 import { Request, Response} from 'express';
 import { IProduct, ProductModel } from '../models';
 
+export const getProducts = async (req: Request, res: Response) => {
+
+    try {
+
+        const { limit = 5, from = 0 } = req.query;
+
+        const [total, products] = await Promise.all([
+            ProductModel.find({ status: true })
+                .countDocuments(),
+
+            ProductModel.find({ status: true })
+                .populate('user', 'name')
+                .populate('category', 'name')
+                .limit(Number(limit))
+                .skip(Number(from))                 
+        ]);
+
+        return res.status(200).json({
+            total, 
+            products
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+
+};
+
+export const getProduct =  async (req: Request, res: Response) => {
+
+    try {
+
+        const id = req.params.id;
+
+        const product = await ProductModel.findById(id).populate('user', 'name').populate('category', 'name');
+
+        return res.status(200).json({
+            product
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: 'Por favor hable con el administrador'
+        });
+    }
+    
+};
+
 export const postProduct = async (req: Request, res: Response) => {    
 
     try {

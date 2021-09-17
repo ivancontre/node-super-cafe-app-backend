@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { google, login } from '../controllers/auth';
+import { google, login } from '../controllers';
 import { fieldsValidator } from '../middlewares';
 
 const router: Router = Router();

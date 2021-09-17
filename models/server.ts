@@ -2,9 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { dbConnection } from '../database/config';
 
-
-
-
 export default class Server {
     app: express.Application;
     port: string;
@@ -20,6 +17,7 @@ export default class Server {
             auth: '/api/auth',
             categories: '/api/categories',
             products: '/api/products',
+            search: '/api/search'
         };
 
         // Conectar a base de datos
@@ -53,6 +51,7 @@ export default class Server {
         this.app.use(this.paths.users, require('../routes/user'));
         this.app.use(this.paths.categories, require('../routes/category'));
         this.app.use(this.paths.products, require('../routes/product'));
+        this.app.use(this.paths.search, require('../routes/search'));
 
     }
 

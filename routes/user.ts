@@ -6,7 +6,7 @@ import {
     patchUser, 
     postUser, 
     putUser 
-} from '../controllers/user';
+} from '../controllers';
 import { existsEmail, existsUser, isValidRole } from '../helpers/dbValidators';
 
 import {

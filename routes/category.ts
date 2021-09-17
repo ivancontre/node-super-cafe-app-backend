@@ -6,7 +6,7 @@ import {
     getCategory, 
     postCategory, 
     putCategory 
-} from '../controllers/category';
+} from '../controllers';
 import { existsCategory } from '../helpers/dbValidators';
 import { fieldsValidator, hasRole, verifyJWT } from '../middlewares';
 
