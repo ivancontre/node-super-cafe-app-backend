@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { updateImage, upload, getImage } from '../controllers';
+import { updateImageCloudinary, upload, getImage } from '../controllers';
 import { enabledCollections } from '../helpers';
 import { fieldsValidator, validateFile, verifyJWT } from '../middlewares';
 
@@ -23,7 +23,7 @@ router.put(
         check('collection').custom(c => enabledCollections(c, ['users', 'products'])),
         fieldsValidator
     ],
-    updateImage
+    updateImageCloudinary
 );
 
 router.get(
