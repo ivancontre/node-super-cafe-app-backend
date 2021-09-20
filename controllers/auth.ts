@@ -2,7 +2,7 @@ import { Request, Response} from 'express';
 import { compareSync } from 'bcryptjs';
 
 import { UserModel } from '../models';
-import { generateJWT } from '../helpers/jwt';
+import { generateJWT } from '../helpers';
 import { googleVerify } from '../helpers/googleVerify';
 import { TokenPayload } from 'google-auth-library';
 
