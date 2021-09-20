@@ -8,6 +8,8 @@ export const isValidRole = async (name: string) => {
         throw new Error(`El rol "${ name }"" no está registrado en la BD`);
     }
 
+    return true;
+
 };
 
 export const existsEmail = async (email: string) => {
@@ -17,6 +19,8 @@ export const existsEmail = async (email: string) => {
     if (userExists) {
         throw new Error(`El email "${ email }" ya se encuentra registrado en la BD`);
     }
+
+    return true;
 };
 
 export const existsUser = async (id: string) => {
@@ -26,6 +30,8 @@ export const existsUser = async (id: string) => {
     if (!userExists) {
         throw new Error(`El ID "${ id }" de usuario no existe`);
     }
+
+    return true;
 };
 
 export const existsCategory = async (id: string) => {
@@ -35,6 +41,8 @@ export const existsCategory = async (id: string) => {
     if (!categoryExists || !categoryExists.status) {
         throw new Error(`El ID "${ id }" de categoría no existe`);
     }
+
+    return true;
 };
 
 export const existsProduct = async (id: string) => {
@@ -44,4 +52,15 @@ export const existsProduct = async (id: string) => {
     if (!productExists || !productExists.status) {
         throw new Error(`El ID "${ id }" de producto no existe`);
     }
+
+    return true;
+};
+
+export const enabledCollections = (collection: string, enabledCollections: string[]) => {
+
+    if (!enabledCollections.includes(collection)) {
+        throw new Error(`La colección "${ collection }" no está dentro de las permitidas: ${ enabledCollections.join(', ') }`);
+    }
+
+    return true;
 };

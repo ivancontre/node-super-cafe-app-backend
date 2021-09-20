@@ -1,13 +1,40 @@
 import { Router } from 'express';
-import { upload } from '../controllers';
-import { verifyJWT } from '../middlewares';
+import { check } from 'express-validator';
+import { updateImage, upload, getImage } from '../controllers';
+import { enabledCollections } from '../helpers';
+import { fieldsValidator, validateFile, verifyJWT } from '../middlewares';
+
 
 const router: Router = Router();
 
 router.post(
     '/',
     verifyJWT,
+    validateFile,
     upload
 );
+
+router.put(
+    '/:collection/:id',
+    verifyJWT,
+    validateFile,
+    [
+        check('id', 'El ID no es válido').isMongoId(),
+        check('collection').custom(c => enabledCollections(c, ['users', 'products'])),
+        fieldsValidator
+    ],
+    updateImage
+);
+
+router.get(
+    '/:collection/:id',
+    [
+        check('id', 'El ID no es válido').isMongoId(),
+        check('collection').custom(c => enabledCollections(c, ['users', 'products'])),
+        fieldsValidator
+    ],
+    getImage
+
+)
 
 module.exports = router;

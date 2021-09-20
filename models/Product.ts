@@ -10,6 +10,7 @@ export interface IProduct extends Document{
     category: PopulatedDoc<ICategory>;
     description?: string;
     available?: boolean;
+    img?: string;
 };
 
 const schema: Schema = new Schema({
@@ -42,6 +43,9 @@ const schema: Schema = new Schema({
     available: {
         type: Boolean,
         default: true
+    },
+    img: {
+        type: String
     }
 });
 

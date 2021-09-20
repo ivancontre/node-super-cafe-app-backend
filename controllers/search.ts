@@ -194,6 +194,10 @@ export const search = async (req: Request, res: Response) => {
                 
             default:
 
+                return res.status(400).json({
+                    msg: 'Debe indicar una colección'
+                });
+
                 break;
         }
         
