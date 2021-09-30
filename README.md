@@ -7,6 +7,9 @@ Está creada en base:
 * Typescript
 * BcryptJS
 * MongoDB
+* Cloudinary
+* JWT
+* Google Auth
 
 ### Despliegue en Heroku por primera vez
 
